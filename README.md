@@ -1,2 +1,2 @@
 # guess-the-work
-Guess which BG LIterature work the quote is from
+A Python web app – Guess which BG Literature work the quote is from
