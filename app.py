@@ -10,4 +10,9 @@ conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 
 @app.route("/")
 def home():
-    return render_template("home.html")
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM authors;")
+
+    authors = cur.fetchall()
+
+    return render_template("home.html", authors=authors)
