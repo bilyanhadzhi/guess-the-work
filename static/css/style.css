@@ -11,3 +11,102 @@
 html, body {
     min-width: 310px;
 }
+
+body {
+    display: flex;
+    flex-direction: column;
+    background-color: #FAFAFA;
+}
+
+main {
+    padding: 20px;
+}
+
+section.authors-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h3.pick-authors-title {
+    text-align: center;
+    font-size: 1.3rem;
+}
+
+section.author-list {
+    display: flex;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+section.author-list > button {
+    border: none;
+    padding: 3px;
+    margin: 5px 0;
+    width: 80%;
+    height: 30px;
+    font-size: 1rem;
+}
+
+button#start-btn {
+    height: 40px;
+    width: 40%;
+    border: none;
+    font-size: 1.1rem;
+    background-color: #DA402D;
+    color: #FAFAFA;
+}
+
+footer {
+    height: 30px;
+    background-color: #95C718;
+    color: #212121;
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    flex-direction: row-reverse;
+    padding: 5px;
+}
+
+#heart {
+    color: #DA402D;
+}
+
+@media screen and (min-width: 500px) {
+    section.author-list > button {
+        width: 40%;
+        margin: 10px;
+        height: 40px;
+    }
+}
+
+@media screen and (min-width: 700px) {
+    section.author-list > button {
+        width: 27%;
+    }
+
+    button#start-btn {
+        width: 150px;
+        height: 50px;
+        font-size: 1.3rem;
+    }
+}
+
+@media screen and (min-width: 1000px) {
+    section.author-list {
+        padding-left: 4%;
+        padding-right: 4%;
+    }
+    
+    section.author-list > button {
+        width: 20%;
+    }
+}
+
+@media screen and (min-width: 1200px) {
+    section.author-list > button {
+        width: 16%;
+    }
+}

@@ -9,8 +9,25 @@
 <body>
     <header></header>
 
+    <main>
+        <section class="authors-form">
+            <h3 class="pick-authors-title">Изберете автори:</h3>
+            <section class="author-list">
+                {% for author in authors %}
+                    <button>
+                        {{ author[1] }}
+                    </button>
+                {% endfor %}
+            </section>
+            <button id="start-btn">Старт</button>    
+        </section>
+    </main>
 
-    <footer></footer>
+    <footer>
+        <section>
+            Направено с <span id="heart">❤</span>
+        </section>
+    </footer>
     <script>{% include 'js/home.js' %}</script>
 </body>
 </html>

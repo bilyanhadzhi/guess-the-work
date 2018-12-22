@@ -1,1 +1,4 @@
-console.log({{ authors|safe }});
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('loaded');
+});
+
