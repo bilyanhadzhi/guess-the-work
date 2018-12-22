@@ -4,16 +4,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Познай творбата</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
     <header></header>
 
 
-    <script>
-        var authors = {{ authors|safe }};
-        console.log(authors);
-    </script>
     <footer></footer>
+    <script>{% include 'js/home.js' %}</script>
 </body>
 </html>
