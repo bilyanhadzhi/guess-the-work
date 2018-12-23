@@ -10,6 +10,7 @@
 
 html, body {
     min-width: 310px;
+    height: 100%;
 }
 
 body {
