@@ -17,12 +17,13 @@
             <h3 class="pick-authors-title">Изберете автори:</h3>
             <section class="author-list">
                 {% for author in authors %}
-                    <button>
-                        {{ author[1] }}
-                    </button>
+                <section class="author-list-item">
+                    <button>{{ author[1] }}</button>
+                    <div class="author-active-status"></div>
+                </section>
                 {% endfor %}
             </section>
-            <button id="start-btn">Старт</button>    
+            <button id="start-btn">Старт</button>
         </section>
     </main>
 
