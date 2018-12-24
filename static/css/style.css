@@ -70,6 +70,7 @@ section.author-list-item > button {
     position: relative;
     left: 5px;
     max-width: 300px;
+    transition: all 0.1s ease-in-out;
 }
 
 section.author-list-item > div.author-active-status {
@@ -79,6 +80,11 @@ section.author-list-item > div.author-active-status {
     z-index: 1;
     position: relative;
     right: 5px;
+    transition: all 0.1s ease-in-out;
+}
+
+section.author-list-item > div.author-active-status.picked {
+    background-color: #2fcb73;
 }
 
 section.author-list-item > button:hover {
@@ -100,6 +106,7 @@ button#start-btn {
     font-size: 1.1rem;
     background-color: #e74c3c;
     color: #FAFAFA;
+    transition: all 0.1s ease-in-out;
 }
 
 button#start-btn:hover {

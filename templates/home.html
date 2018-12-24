@@ -8,6 +8,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Познай творбата</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
 </head>
 <body>
     <header></header>
@@ -19,7 +21,7 @@
                 {% for author in authors %}
                 <section class="author-list-item">
                     <button>{{ author[1] }}</button>
-                    <div class="author-active-status"></div>
+                    <div class="author-active-status picked"></div>
                 </section>
                 {% endfor %}
             </section>
