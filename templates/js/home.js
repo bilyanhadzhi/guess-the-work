@@ -1,6 +1,18 @@
 document.addEventListener('DOMContentLoaded', function() {
     {% include 'js/models/author.js' %}
 
+    var game = {
+        on: false,
+        init: function() {
+
+        },
+        begin: function(authors) {
+            this.on = true;
+            this.authors = authors;
+            console.log('game on!', authors);
+        },
+    };
+
     var newGameScreen = {
         init: function() {
             this.cacheDOM();
@@ -8,19 +20,23 @@ document.addEventListener('DOMContentLoaded', function() {
             this.bindEvents();
         },
         cacheDOM: function() {
+            this.containerEl = document.getElementsByClassName('authors-form')[0];
             this.authorElements = document.getElementsByClassName('author-list')[0].children;
+            this.startBtn = document.getElementById('start-btn');
         },
         bindEvents: function() {
             // bind picked-status switching
-            Object.keys(this.authors).forEach(function(key) {
-                this.authors[key].buttonEl.addEventListener('click', function() {
-                    this.authors[key].togglePickedStatus();
+            this.authors.forEach(function(author) {
+                author.buttonEl.addEventListener('click', function() {
+                    author.togglePickedStatus();
                 }.bind(this));
             }.bind(this));
+
+            this.startBtn.addEventListener('click', this.startGame.bind(this));
         },
         populateAuthors: function() {
             var authors = {{ authors|safe }};
-            this.authors = {};
+            this.authors = [];
 
             for (var i = 0; i < authors.length; ++i) {
                 var authorName = authors[i];
@@ -29,6 +45,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 this.authors[i] = new Author(authorName, authorElement, authorButton);
             }
+        },
+        startGame: function() {
+            this.hide();
+            game.begin(this.getPickedAuthors());
+        },
+        hide: function() {
+            this.containerEl.style.display = 'none';
+        },
+        getPickedAuthors: function() {
+            return this.authors.filter(function(author) {
+                return author.picked;
+            });
         },
     };
 
