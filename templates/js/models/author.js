@@ -1,5 +1,6 @@
-function Author(name, element, buttonEl) {
-    this.name = name;
+function Author(authorID, authorName, element, buttonEl) {
+    this.authorID = authorID;
+    this.authorName = authorName;
     this.picked = true;
     this.element = element;
     this.buttonEl = buttonEl;

@@ -3,6 +3,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     var game = {
         on: false,
+        question_no: 0,
+        current_question_text: '',
         init: function() {
 
         },
@@ -10,6 +12,15 @@ document.addEventListener('DOMContentLoaded', function() {
             this.on = true;
             this.authors = authors;
             console.log('game on!', authors);
+
+            this.askQuestion();
+        },
+        askQuestion: function() {
+            this.question_no++;
+            var randomAuthorIndex = Math.floor(Math.random() * 15);
+
+            // get excerpt from API
+            console.log('author: ', this.authors[randomAuthorIndex]);
         },
     };
 
@@ -43,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 var authorElement = this.authorElements[i];
                 var authorButton = this.authorElements[i].children[0];
 
-                this.authors[i] = new Author(authorName, authorElement, authorButton);
+                this.authors[i] = new Author(i, authorName, authorElement, authorButton);
             }
         },
         startGame: function() {
