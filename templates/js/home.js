@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 var authorElement = this.authorElements[i];
                 var authorButton = this.authorElements[i].children[0];
 
-                this.authors[i] = new Author(i, authorName, authorElement, authorButton);
+                this.authors[i] = new Author(i+1, authorName, authorElement, authorButton);
             }
         },
         startGame: function() {
