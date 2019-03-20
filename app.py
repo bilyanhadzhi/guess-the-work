@@ -21,6 +21,7 @@ def home():
 @app.route("/api/get_excerpt", methods=['GET'])
 def api_get_excerpt():
     author_ids = request.args.get('author_ids')
+    show_answer = request.args.get('show_answer')
 
     if not author_ids:
         author_ids = []
@@ -39,15 +40,17 @@ def api_get_excerpt():
     print('author id:', random_id)
 
     cur = conn.cursor()
-    cur.execute("SELECT file_name FROM works \
+    cur.execute("SELECT file_name, title FROM works \
                 WHERE author_id = {0} \
                 ORDER BY random() \
                 LIMIT 1".format(random_id))
 
     print('query done')
-    file_name = ''.join(cur.fetchone())
+    work = cur.fetchone()
 
-    with open('works/' + file_name) as fin:
+    print(work)
+
+    with open('works/' + work[0]) as fin:
         txt = fin.read()
         content_begin = txt.find('cb')
         content_end = txt.find('ce')
@@ -77,5 +80,9 @@ def api_get_excerpt():
             result = '<br>'.join(result[begin_index:begin_index + 10])
 
     print('len: ', len(result))
+
+    if (show_answer):
+        result += "<br><br><br>"
+        result += "(\"{0}\")".format(work[1])
 
     return result
