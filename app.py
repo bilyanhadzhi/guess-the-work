@@ -22,8 +22,13 @@ def home():
 def api_get_excerpt():
     author_ids = request.args.get('author_ids')
 
-    author_ids = author_ids.split(',')
-    author_ids = [author_id for author_id in author_ids if author_id.isnumeric() and 1 <= int(author_id) <= 15]
+    if not author_ids:
+        author_ids = []
+        for i in range(1, 15):
+            author_ids.append(i)
+    else:
+        author_ids = author_ids.split(',')
+        author_ids = [author_id for author_id in author_ids if author_id.isnumeric() and 1 <= int(author_id) <= 15]
 
     if not author_ids:
         return ''
@@ -33,29 +38,43 @@ def api_get_excerpt():
     print('-----------')
     print('author id:', random_id)
 
-
     cur = conn.cursor()
-    cur.execute("SELECT content FROM works \
+    cur.execute("SELECT file_name FROM works \
                 WHERE author_id = {0} \
                 ORDER BY random() \
                 LIMIT 1".format(random_id))
 
-    result = ''.join(cur.fetchone())
-    result = result.split('\n')
+    print('query done')
+    file_name = ''.join(cur.fetchone())
 
-    # print(result)
+    with open('works/' + file_name) as fin:
+        txt = fin.read()
+        content_begin = txt.find('cb')
+        content_end = txt.find('ce')
+        content = txt[content_begin+3:content_end]
+
+    result = content.split('\n')
     # print(type(result))
 
-    if (len(result) > 10):
+    if (len(result) > 10 and len(result) < 1000):
         # grab 10 lines
         begin_index = random.randint(0, len(result) - 11)
         end_index = begin_index + 10
 
         print('begin: ', begin_index)
         print('end: ', end_index)
-        result = '\n'.join(result[begin_index:begin_index + 10])
+        result = '<br>'.join(result[begin_index:begin_index + 10])
     else:
-        return ''
+        if (len(result) <= 10):
+            result = '<br>'.join(result[0:len(result)])
+        else:
+            # grab 10 lines
+            begin_index = random.randint(100, len(result) - 101)
+            end_index = begin_index + 10
+
+            print('begin: ', begin_index)
+            print('end: ', end_index)
+            result = '<br>'.join(result[begin_index:begin_index + 10])
 
     print('len: ', len(result))
 
