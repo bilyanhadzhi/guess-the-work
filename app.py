@@ -81,7 +81,7 @@ def api_get_excerpt():
 
     print('len: ', len(result))
 
-    if (show_answer):
+    if (show_answer in ['1', 'true', 'yes']):
         result += "<br><br><br>"
         result += "(\"{0}\")".format(work[1])
 
