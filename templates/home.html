@@ -16,7 +16,7 @@
 
     <main>
         <section class="authors-form">
-            <h3 class="pick-authors-title">Изберете автори:</h3>
+            <h3 class="pick-authors-title">Избрани автори:</h3>
             <section class="author-list">
                 {% for author in authors %}
                 <section class="author-list-item">
@@ -26,11 +26,15 @@
                 {% endfor %}
             </section>
             <button id="start-btn">Старт</button>
+            <section class="toggle-all-container">
+                <button class="toggle-all-btn" id="mark-all-btn">Маркирай всички</button>
+                <button class="toggle-all-btn" id="unmark-all-btn">Отмаркирай всички</button>
+            </section>
         </section>
 
         <section class="game-container">
             <section class="excerpt-container">
-                
+
             </section>
         </section>
     </main>

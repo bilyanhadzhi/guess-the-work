@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
         setCurrentQuestionText: function(responseText) {
             this.currentQuestionText = responseText;
             this.currentQuestionTextIsShort = this.currentQuestionText.length < 200;
-            
+
             this.renderQuestion();
         },
         renderQuestion: function() {
@@ -75,9 +75,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     callback(xmlHttp.responseText);
                 }
             };
-            
+
             // TODO: either make it secure or add some obfuscation
-            // obfuscatedID = window.btoa(author.authorID);
+            // right now very easy to cheat the author
             xmlHttp.open("GET", this.getExcerptURL + '?author_ids=' + author.authorID);
             xmlHttp.send();
         },
@@ -96,6 +96,8 @@ document.addEventListener('DOMContentLoaded', function() {
             this.containerEl = document.getElementsByClassName('authors-form')[0];
             this.authorElements = document.getElementsByClassName('author-list')[0].children;
             this.startBtn = document.getElementById('start-btn');
+            this.markAllBtn = document.getElementById('mark-all-btn');
+            this.unmarkAllBtn = document.getElementById('unmark-all-btn');
         },
         bindEvents: function() {
             // bind picked-status switching
@@ -106,6 +108,8 @@ document.addEventListener('DOMContentLoaded', function() {
             }.bind(this));
 
             this.startBtn.addEventListener('click', this.startGame.bind(this));
+            this.markAllBtn.addEventListener('click', this.toggleAllAuthorsOn.bind(this));
+            this.unmarkAllBtn.addEventListener('click', this.toggleAllAuthorsOff.bind(this));
         },
         populateAuthors: function() {
             var authors = {{ authors|safe }};
@@ -116,12 +120,31 @@ document.addEventListener('DOMContentLoaded', function() {
                 var authorElement = this.authorElements[i];
                 var authorButton = this.authorElements[i].children[0];
 
-                this.authors[i] = new Author(i+1, authorName, authorElement, authorButton);
+                this.authors[i] = new Author(i + 1, authorName, authorElement, authorButton);
             }
         },
         startGame: function() {
-            this.hide();
-            game.begin(this.getPickedAuthors());
+            pickedAuthors = this.getPickedAuthors();
+
+            if (pickedAuthors.length > 0) {
+                this.hide();
+                game.begin(pickedAuthors);
+            } else {
+                alert('Не сте избрали автори!');
+            }
+        },
+        toggleAllAuthorsOn: function() {
+            for (var i = 0; i < this.authors.length; ++i) {
+                this.authors[i].toggleOn();
+            }
+
+            this.cacheDOM();
+        },
+        toggleAllAuthorsOff: function() {
+            for (var i = 0; i < this.authors.length; ++i) {
+                this.authors[i].toggleOff();
+            }
+            this.cacheDOM();
         },
         hide: function() {
             this.containerEl.style.display = 'none';

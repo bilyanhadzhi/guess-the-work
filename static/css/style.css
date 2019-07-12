@@ -100,6 +100,7 @@ section.author-list-item > button:active {
 }
 
 button#start-btn {
+    margin: 5px;
     height: 40px;
     width: 40%;
     border: none;
@@ -122,6 +123,27 @@ section.game-container > section.excerpt-container {
     width: 100%;
     padding: 5% 10%;
     font-size: 1.3rem;
+}
+
+section.toggle-all-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+button.toggle-all-btn {
+    margin: 5px;
+    width: 45%;
+    height: 35px;
+    border: none;
+    font-size: 1rem;
+    background-color: #424242;
+    color: #FAFAFA;
+    transition: all 0.1s ease-in-out;
+}
+
+button.toggle-all-btn:hover {
+    background-color: #616161;
 }
 
 footer {
@@ -160,6 +182,9 @@ footer > section {
         height: 40px;
         margin-top: 10px;
     }
+    button.toggle-all-btn {
+        width: 30%;
+    }
 }
 
 @media screen and (min-width: 700px) {
@@ -170,6 +195,10 @@ footer > section {
         width: 150px;
         height: 50px;
         font-size: 1.3rem;
+    }
+    button.toggle-all-btn {
+        width: 180px;
+        height: 40px;
     }
     footer {
         height: 30px;
