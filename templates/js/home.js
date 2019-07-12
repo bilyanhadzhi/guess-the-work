@@ -3,24 +3,86 @@ document.addEventListener('DOMContentLoaded', function() {
 
     var game = {
         on: false,
-        question_no: 0,
-        current_question_text: '',
+        questionNo: 0,
+        currentQuestionText: '',
+        currentQuestionTextIsShort: undefined,
         init: function() {
-
+            this.cacheDOM();
+        },
+        cacheDOM: function() {
+            this.containerEl = document.getElementsByClassName('game-container')[0];
+            this.excerptContainerEl = document.getElementsByClassName('excerpt-container')[0];
         },
         begin: function(authors) {
+            console.log(authors);
             this.on = true;
             this.authors = authors;
-            console.log('game on!', authors);
 
+            this.showGameContainer();
             this.askQuestion();
         },
+        end: function() {
+            this.on = false;
+            this.authors = [];
+
+            // console.log('game off');
+            // newGameScreen.reset();
+        },
+        setCurrentQuestionText: function(responseText) {
+            this.currentQuestionText = responseText;
+            this.currentQuestionTextIsShort = this.currentQuestionText.length < 200;
+            
+            this.renderQuestion();
+        },
+        renderQuestion: function() {
+            if (this.currentQuestionTextIsShort) {
+                this.setStyleForShortText();
+            } else {
+                this.setStyleForLongText();
+            }
+
+            this.excerptContainerEl.innerHTML = this.currentQuestionText;
+        },
         askQuestion: function() {
-            this.question_no++;
-            var randomAuthorIndex = Math.floor(Math.random() * 15);
+            this.questionNo++;
+            var randomAuthorIndex = Math.floor(Math.random() * this.authors.length);
 
             // get excerpt from API
-            console.log('author: ', this.authors[randomAuthorIndex]);
+            var randomAuthor = this.authors[randomAuthorIndex];
+
+            console.log('our author: ', randomAuthor);
+
+            api.getExcerpt(randomAuthor, this.setCurrentQuestionText.bind(this));
+        },
+        showGameContainer: function() {
+            this.containerEl.style.display = 'block';
+        },
+        setStyleForShortText: function() {
+            this.excerptContainerEl.style.justifyContent = 'center';
+        },
+        setStyleForLongText: function() {
+            this.excerptContainerEl.style.justifyContent = 'flex-start';
+        },
+    };
+
+    var api = {
+        getExcerptURL: '/api/get_excerpt',
+        getExcerpt: function(author, callback) {
+            var xmlHttp = new XMLHttpRequest;
+
+            xmlHttp.onreadystatechange = function() {
+                if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+                    callback(xmlHttp.responseText);
+                }
+            };
+            
+            // TODO: either make it secure or add some obfuscation
+            // obfuscatedID = window.btoa(author.authorID);
+            xmlHttp.open("GET", this.getExcerptURL + '?author_ids=' + author.authorID);
+            xmlHttp.send();
+        },
+        testAnswer: function() {
+            // TODO
         },
     };
 
@@ -72,4 +134,5 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     newGameScreen.init();
+    game.init();
 });

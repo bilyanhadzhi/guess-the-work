@@ -113,6 +113,17 @@ button#start-btn:hover {
     background-color: #e95a4b;
 }
 
+section.game-container {
+    display: none;
+}
+
+section.game-container > section.excerpt-container {
+    display: flex;
+    width: 100%;
+    padding: 5% 10%;
+    font-size: 1.3rem;
+}
+
 footer {
     height: 40px;
     background-color: #27ae60;

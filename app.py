@@ -62,22 +62,22 @@ def api_get_excerpt():
     if (len(result) > 10 and len(result) < 1000):
         # grab 10 lines
         begin_index = random.randint(0, len(result) - 11)
-        end_index = begin_index + 10
+        end_index = begin_index + 5
 
         print('begin: ', begin_index)
         print('end: ', end_index)
-        result = '<br>'.join(result[begin_index:begin_index + 10])
+        result = '<br>'.join(result[begin_index:end_index])
     else:
         if (len(result) <= 10):
             result = '<br>'.join(result[0:len(result)])
         else:
             # grab 10 lines
             begin_index = random.randint(100, len(result) - 101)
-            end_index = begin_index + 10
+            end_index = begin_index + 5
 
             print('begin: ', begin_index)
             print('end: ', end_index)
-            result = '<br>'.join(result[begin_index:begin_index + 10])
+            result = '<br>'.join(result[begin_index:end_index])
 
     print('len: ', len(result))
 
