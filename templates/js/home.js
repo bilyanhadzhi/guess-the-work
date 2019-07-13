@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
             this.excerptContainerEl = document.getElementsByClassName('excerpt-container')[0];
         },
         begin: function(authors) {
-            console.log(authors);
+            // console.log(authors);
             this.on = true;
             this.authors = authors;
 
@@ -41,18 +41,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 this.setStyleForLongText();
             }
 
+            window.scrollTo(0, 0);
             this.excerptContainerEl.innerHTML = this.currentQuestionText;
         },
         askQuestion: function() {
             this.questionNo++;
-            var randomAuthorIndex = Math.floor(Math.random() * this.authors.length);
 
             // get excerpt from API
-            var randomAuthor = this.authors[randomAuthorIndex];
-
-            console.log('our author: ', randomAuthor);
-
-            api.getExcerpt(randomAuthor, this.setCurrentQuestionText.bind(this));
+            api.getExcerpt(this.authors, this.setCurrentQuestionText.bind(this));
         },
         showGameContainer: function() {
             this.containerEl.style.display = 'block';
@@ -67,7 +63,22 @@ document.addEventListener('DOMContentLoaded', function() {
 
     var api = {
         getExcerptURL: '/api/get_excerpt',
-        getExcerpt: function(author, callback) {
+        getExcerpt: function(authors, callback) {
+            if (authors.length < 1) {
+                return;
+            }
+
+            var authorIDsString = "";
+
+            console.log(authors);
+            // turn author ids into csv
+            for (var i = 0; i < authors.length; ++i) {
+                authorIDsString += authors[i].authorID;
+                authorIDsString += ',';
+            }
+
+            authorIDsString = authorIDsString.substring(0, authorIDsString.length - 1);
+
             var xmlHttp = new XMLHttpRequest;
 
             xmlHttp.onreadystatechange = function() {
@@ -76,9 +87,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             };
 
+            console.log(authorIDsString);
+
             // TODO: either make it secure or add some obfuscation
             // right now very easy to cheat the author
-            xmlHttp.open("GET", this.getExcerptURL + '?author_ids=' + author.authorID);
+            xmlHttp.open("GET", this.getExcerptURL + '?author_ids=' + authorIDsString);
             xmlHttp.send();
         },
         testAnswer: function() {
@@ -98,6 +111,7 @@ document.addEventListener('DOMContentLoaded', function() {
             this.startBtn = document.getElementById('start-btn');
             this.markAllBtn = document.getElementById('mark-all-btn');
             this.unmarkAllBtn = document.getElementById('unmark-all-btn');
+            this.noAuthorsPopup = document.getElementById('no-authors-popup');
         },
         bindEvents: function() {
             // bind picked-status switching
@@ -130,7 +144,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 this.hide();
                 game.begin(pickedAuthors);
             } else {
-                alert('Не сте избрали автори!');
+                this.showNoAuthorsPopup();
+                // alert('Не сте избрали автори!');
             }
         },
         toggleAllAuthorsOn: function() {
@@ -154,6 +169,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 return author.picked;
             });
         },
+        showNoAuthorsPopup: function() {
+            if (this.noAuthorsPopup.classList.contains('shown') == false) {
+                this.noAuthorsPopup.classList.add('shown');
+            }
+
+            setTimeout(this.hideNoAuthorsPopup.bind(this), 2000);
+        },
+        hideNoAuthorsPopup: function() {
+            if (this.noAuthorsPopup.classList.contains('shown')) {
+                this.noAuthorsPopup.classList.remove('shown');
+            }
+        }
     };
 
     newGameScreen.init();

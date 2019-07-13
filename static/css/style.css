@@ -102,7 +102,7 @@ section.author-list-item > button:active {
 button#start-btn {
     margin: 5px;
     height: 40px;
-    width: 40%;
+    width: 75%;
     border: none;
     font-size: 1.1rem;
     background-color: #e74c3c;
@@ -122,18 +122,19 @@ section.game-container > section.excerpt-container {
     display: flex;
     width: 100%;
     padding: 5% 10%;
-    font-size: 1.3rem;
+    font-size: 1rem;
 }
 
 section.toggle-all-container {
     width: 100%;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
 }
 
 button.toggle-all-btn {
     margin: 5px;
-    width: 45%;
+    width: 75%;
     height: 35px;
     border: none;
     font-size: 1rem;
@@ -144,6 +145,30 @@ button.toggle-all-btn {
 
 button.toggle-all-btn:hover {
     background-color: #616161;
+}
+
+section#no-authors-popup {
+    z-index: 2;
+    align-items: center;
+    justify-content: center;
+    width: 75%;
+    height: 30px;
+    position: fixed;
+    margin: 0 auto;
+    bottom: -30px;
+    text-align: center;
+    left: 0;
+    right: 0;
+    background-color: rgba(171,71,188 ,0.8);
+    color: #fafafa;
+    opacity: 0;
+    transition: 500ms;
+}
+
+section#no-authors-popup.shown {
+    opacity: 1;
+    display: flex;
+    transform: translate(0, -12vh);
 }
 
 footer {
@@ -170,6 +195,15 @@ footer > section {
     margin-top: 2px;
 }
 
+@media screen and (min-width: 400px) {
+    section.game-container > section.excerpt-container {
+        font-size: 1.1rem;
+    }
+    section#no-authors-popup {
+        width: 50%;
+    }
+}
+
 @media screen and (min-width: 500px) {
     section.author-list-item {
         width: 50%;
@@ -182,7 +216,21 @@ footer > section {
         height: 40px;
         margin-top: 10px;
     }
+    button#start-btn {
+        width: 30%;
+    }
+    section.toggle-all-container {
+        flex-direction: row;
+        align-items: initial;
+        justify-content: center;
+    }
     button.toggle-all-btn {
+        width: 35%;
+    }
+    section.game-container > section.excerpt-container {
+        font-size: 1.2rem;
+    }
+    section#no-authors-popup {
         width: 30%;
     }
 }
@@ -202,6 +250,12 @@ footer > section {
     }
     footer {
         height: 30px;
+    }
+    section.game-container > section.excerpt-container {
+        font-size: 1.3rem;
+    }
+    section#no-authors-popup {
+        width: 250px;
     }
 }
 
