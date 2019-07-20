@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
         currentQuestionText: '',
         currentQuestionTextIsShort: undefined,
         init: function() {
+            api.getAllTitles(this.setAllTitles.bind(this));
             this.cacheDOM();
         },
         cacheDOM: function() {
@@ -28,9 +29,14 @@ document.addEventListener('DOMContentLoaded', function() {
             // console.log('game off');
             // newGameScreen.reset();
         },
+        setAllTitles: function(titles) {
+            this.allTitles = JSON.parse(titles);
+
+            {% include 'js/answer-autocomplete.js' %}
+        },
         setCurrentQuestionText: function(responseText) {
             this.currentQuestionText = responseText;
-            this.currentQuestionTextIsShort = this.currentQuestionText.length < 200;
+            this.currentQuestionTextIsShort = this.currentQuestionText.length < 300;
 
             this.renderQuestion();
         },
@@ -63,6 +69,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     var api = {
         getExcerptURL: '/api/get_excerpt',
+        getAllTitlesURL: '/api/get_all_titles',
         getExcerpt: function(authors, callback) {
             if (authors.length < 1) {
                 return;
@@ -70,7 +77,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             var authorIDsString = "";
 
-            console.log(authors);
+            // console.log(authors);
             // turn author ids into csv
             for (var i = 0; i < authors.length; ++i) {
                 authorIDsString += authors[i].authorID;
@@ -87,11 +94,23 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             };
 
-            console.log(authorIDsString);
+            // console.log(authorIDsString);
 
             // TODO: either make it secure or add some obfuscation
             // right now very easy to cheat the author
             xmlHttp.open("GET", this.getExcerptURL + '?author_ids=' + authorIDsString);
+            xmlHttp.send();
+        },
+        getAllTitles: function(callback) {
+            var xmlHttp = new XMLHttpRequest;
+
+            xmlHttp.onreadystatechange = function() {
+                if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+                    callback(xmlHttp.responseText);
+                }
+            };
+
+            xmlHttp.open("GET", this.getAllTitlesURL);
             xmlHttp.send();
         },
         testAnswer: function() {
@@ -112,6 +131,7 @@ document.addEventListener('DOMContentLoaded', function() {
             this.markAllBtn = document.getElementById('mark-all-btn');
             this.unmarkAllBtn = document.getElementById('unmark-all-btn');
             this.noAuthorsPopup = document.getElementById('no-authors-popup');
+            this.inputBoxEl = document.getElementById('autoComplete');
         },
         bindEvents: function() {
             // bind picked-status switching

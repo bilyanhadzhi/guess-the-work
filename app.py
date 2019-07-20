@@ -1,6 +1,7 @@
 import os
 import random
 import psycopg2
+import json
 
 from flask import Flask, render_template, request
 
@@ -81,8 +82,21 @@ def api_get_excerpt():
 
     print('len: ', len(result))
 
-    if (show_answer in ['1', 'true', 'yes']):
+    if (show_answer in ['1', 'true', 'yes', 'y']):
         result += "<br><br><br>"
         result += "(\"{0}\")".format(work[1])
 
     return result
+
+@app.route("/api/get_all_titles", methods=['GET'])
+def api_get_all_titles():
+    cur = conn.cursor()
+    cur.execute("SELECT title FROM works")
+
+    all_titles = cur.fetchall()
+
+    all_titles[:] = sorted([title[0] for title in all_titles])
+
+    # print(all_titles)
+
+    return json.dumps(all_titles)

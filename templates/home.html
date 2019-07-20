@@ -25,7 +25,7 @@
                 </section>
                 {% endfor %}
             </section>
-            <button id="start-btn">Старт</button>
+            <button id="start-btn" class="red-btn">Старт</button>
             <section class="toggle-all-container">
                 <button class="toggle-all-btn" id="mark-all-btn">Маркирай всички</button>
                 <button class="toggle-all-btn" id="unmark-all-btn">Отмаркирай всички</button>
@@ -36,18 +36,22 @@
             <section class="excerpt-container">
 
             </section>
+            <section class="input-container">
+                <input id="autoComplete" tabindex="1" placeholder="Име на творбата">
+                <button id="answer-btn" class="red-btn">Познай творбата</button>
+            </section>
         </section>
 
-        <section id="no-authors-popup">
-            Не сте избрали автори!
-        </section>
+        <section id="no-authors-popup">Не сте избрали автори!</section>
     </main>
 
     <footer>
-        <section>
+        <a href="https://github.com/bilyanhadzhi/guess-the-work" target="_blank" id="github-link">
             Направено с <span id="heart">❤</span>
-        </section>
+        </a>
     </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@6.0.0/dist/js/autoComplete.min.js"></script>
     <script>{% include 'js/home.js' %}</script>
 </body>
 </html>
