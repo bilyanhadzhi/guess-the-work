@@ -104,10 +104,13 @@ def api_get_all_titles():
 @app.route("/api/submit_answer", methods=['POST'])
 def submit_answer():
     if request.method == 'POST':
-        cur = conn.cursor()
-
         excerpt = request.form.get('excerpt')
         answer = request.form.get('answer')
+
+        if answer == '' or excerpt == '':
+            return ''
+
+        cur = conn.cursor()
 
         pattern = '%' + excerpt + '%'
 

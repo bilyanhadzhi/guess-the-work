@@ -245,9 +245,26 @@ form.input-container {
     font-weight: bold;
 }
 
-button#answer-btn {
+button#answer-btn, button#show-answer-btn {
     width: 50%;
+}
+
+button#show-answer-btn {
+    background-color: #424242;
     margin-bottom: 30px;
+}
+
+button#show-answer-btn:hover {
+    background-color: #616161;
+}
+
+button#show-answer-btn.show-answer-disabled {
+    opacity: 0.2;
+}
+
+button#show-answer-btn.show-answer-disabled:hover {
+    background-color: #424242;
+    cursor: auto;
 }
 
 footer {
@@ -354,7 +371,7 @@ footer > a#githun-link:focus {
     #autoComplete_results_list {
         width: 40%;
     }
-    button#answer-btn {
+    button#answer-btn, button#show-answer-btn {
         width: 40%;
     }
 }
@@ -369,7 +386,7 @@ footer > a#githun-link:focus {
     #autoComplete_results_list {
         width: 300px;
     }
-    button#answer-btn {
+    button#answer-btn, button#show-answer-btn {
         width: 300px;
     }
 }

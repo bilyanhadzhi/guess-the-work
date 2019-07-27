@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
             api.getAllTitles(this.setAllTitles.bind(this));
             this.cacheDOM();
             this.bindEvents();
+            this.disableShowAnswerBtn();
         },
         cacheDOM: function() {
             this.containerEl = document.getElementsByClassName('game-container')[0];
@@ -19,11 +20,13 @@ document.addEventListener('DOMContentLoaded', function() {
             this.answerForm = document.getElementById('answer-form');
             this.answerField = this.answerForm.elements['answer-field'];
             this.answerHiddenExcerpt = this.answerForm.elements['hidden-excerpt'];
-            this.answerBtn = document.getElementById('answer-btn');
+            // this.answerBtn = document.getElementById('answer-btn');
+            this.showAnswerBtn = document.getElementById('show-answer-btn');
         },
         bindEvents: function() {
             this.answerField.addEventListener('change', this.updateAnswerFieldText.bind(this));
             this.answerForm.addEventListener('submit', this.answerQuestion.bind(this));
+            this.showAnswerBtn.addEventListener('click', this.showAnswer.bind(this));
         },
         begin: function(authors) {
             // console.log(authors);
@@ -74,17 +77,18 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         handleCorrectAnswer: function() {
             newGameScreen.popups.correctAnswerPopup.show();
+            this.disableShowAnswerBtn();
 
             setTimeout(this.askQuestion.bind(this), 1000);
-            console.log("Вярно");
         },
         handleIncorrectAnswer: function() {
             newGameScreen.popups.incorrectAnswerPopup.show();
 
-            console.log("Грешно");
+            setTimeout(this.enableShowAnswerBtn.bind(this), 1000);
         },
         resetAnswerFieldText: function() {
             this.answerField.value = '';
+            this.currentQuestionAnswerFieldText = '';
         },
         updateAnswerFieldText: function() {
             this.currentQuestionAnswerFieldText = this.answerForm.elements['answer-field'].value;
@@ -102,6 +106,20 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         setStyleForLongText: function() {
             this.excerptContainerEl.style.justifyContent = 'flex-start';
+        },
+        enableShowAnswerBtn: function() {
+            this.showAnswerBtn.disabled = false;
+
+            if (this.showAnswerBtn.classList.contains('show-answer-disabled')) {
+                this.showAnswerBtn.classList.remove('show-answer-disabled');
+            }
+        },
+        disableShowAnswerBtn: function() {
+            this.showAnswerBtn.disabled = true;
+            this.showAnswerBtn.classList.add('show-answer-disabled');
+        },
+        showAnswer: function() {
+            // TODO: new api restpoint
         },
     };
 
@@ -165,7 +183,11 @@ document.addEventListener('DOMContentLoaded', function() {
             xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 
             xhr.onreadystatechange = function() {
-                if(xhr.readyState == 4 && xhr.status == 200) {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    if (xhr.responseText === '') {
+                        console.log('Handle no input');
+                    }
+
                     var answerWasCorrect = !!+xhr.responseText;
 
                     if (answerWasCorrect) {
