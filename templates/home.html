@@ -36,13 +36,16 @@
             <section class="excerpt-container">
 
             </section>
-            <section class="input-container">
-                <input id="autoComplete" tabindex="1" placeholder="Име на творбата">
+            <form method="POST" class="input-container" id="answer-form" onsubmit="return false;">
+                <input id="autoComplete" name="answer-field" tabindex="1" autocomplete="off" placeholder="Име на творбата">
+                <input type="hidden" name="hidden-excerpt">
                 <button id="answer-btn" class="red-btn">Познай творбата</button>
-            </section>
+            </form>
         </section>
 
-        <section id="no-authors-popup">Не сте избрали автори!</section>
+        <section class="popup" id="no-authors-popup">Не сте избрали автори!</section>
+        <section class="popup" id="correct-answer-popup">Верен отговор!</section>
+        <section class="popup" id="incorrect-answer-popup">Грешен отговор!</section>
     </main>
 
     <footer>

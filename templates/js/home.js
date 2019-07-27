@@ -1,18 +1,29 @@
 document.addEventListener('DOMContentLoaded', function() {
     {% include 'js/models/author.js' %}
+    {% include 'js/models/popup.js' %}
 
     var game = {
         on: false,
         questionNo: 0,
         currentQuestionText: '',
+        currentQuestionAnswerFieldText: '',
         currentQuestionTextIsShort: undefined,
         init: function() {
             api.getAllTitles(this.setAllTitles.bind(this));
             this.cacheDOM();
+            this.bindEvents();
         },
         cacheDOM: function() {
             this.containerEl = document.getElementsByClassName('game-container')[0];
             this.excerptContainerEl = document.getElementsByClassName('excerpt-container')[0];
+            this.answerForm = document.getElementById('answer-form');
+            this.answerField = this.answerForm.elements['answer-field'];
+            this.answerHiddenExcerpt = this.answerForm.elements['hidden-excerpt'];
+            this.answerBtn = document.getElementById('answer-btn');
+        },
+        bindEvents: function() {
+            this.answerField.addEventListener('change', this.updateAnswerFieldText.bind(this));
+            this.answerForm.addEventListener('submit', this.answerQuestion.bind(this));
         },
         begin: function(authors) {
             // console.log(authors);
@@ -39,6 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
             this.currentQuestionTextIsShort = this.currentQuestionText.length < 300;
 
             this.renderQuestion();
+            this.updateHiddenExcerpt();
         },
         renderQuestion: function() {
             if (this.currentQuestionTextIsShort) {
@@ -52,9 +64,35 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         askQuestion: function() {
             this.questionNo++;
+            this.resetAnswerFieldText();
 
             // get excerpt from API
             api.getExcerpt(this.authors, this.setCurrentQuestionText.bind(this));
+        },
+        answerQuestion: function() {
+            api.submitAnswer(this.currentQuestionAnswerFieldText, this.currentQuestionText.replace(/<br ?\/?>/g, "\n"));
+        },
+        handleCorrectAnswer: function() {
+            newGameScreen.popups.correctAnswerPopup.show();
+
+            setTimeout(this.askQuestion.bind(this), 1000);
+            console.log("Вярно");
+        },
+        handleIncorrectAnswer: function() {
+            newGameScreen.popups.incorrectAnswerPopup.show();
+
+            console.log("Грешно");
+        },
+        resetAnswerFieldText: function() {
+            this.answerField.value = '';
+        },
+        updateAnswerFieldText: function() {
+            this.currentQuestionAnswerFieldText = this.answerForm.elements['answer-field'].value;
+
+            // console.log(this.currentQuestionAswerFieldText);
+        },
+        updateHiddenExcerpt: function() {
+            this.answerHiddenExcerpt.value = this.currentQuestionText.replace(/<br ?\/?>/g, "\n");;
         },
         showGameContainer: function() {
             this.containerEl.style.display = 'block';
@@ -70,6 +108,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var api = {
         getExcerptURL: '/api/get_excerpt',
         getAllTitlesURL: '/api/get_all_titles',
+        submitAnswerURL: '/api/submit_answer',
         getExcerpt: function(authors, callback) {
             if (authors.length < 1) {
                 return;
@@ -113,12 +152,41 @@ document.addEventListener('DOMContentLoaded', function() {
             xmlHttp.open("GET", this.getAllTitlesURL);
             xmlHttp.send();
         },
-        testAnswer: function() {
-            // TODO
+        submitAnswer: function(answer, excerpt) {
+            var xhr = new XMLHttpRequest();
+            var url = this.submitAnswerURL;
+
+            var params = '';
+            params += 'answer=' + answer;
+            params += '&excerpt=' + excerpt;
+
+            xhr.open('POST', url, true);
+
+            xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+            xhr.onreadystatechange = function() {
+                if(xhr.readyState == 4 && xhr.status == 200) {
+                    var answerWasCorrect = !!+xhr.responseText;
+
+                    if (answerWasCorrect) {
+                        game.handleCorrectAnswer();
+                    } else {
+                        game.handleIncorrectAnswer();
+                    }
+                }
+            }
+            xhr.send(params);
         },
     };
 
+    // ANOTHER TRY
+
     var newGameScreen = {
+        popups: {
+            noAuthorsPopup: new Popup(document.getElementById('no-authors-popup'), false),
+            correctAnswerPopup: new Popup(document.getElementById('correct-answer-popup'), false),
+            incorrectAnswerPopup: new Popup(document.getElementById('incorrect-answer-popup'), false),
+        },
         init: function() {
             this.cacheDOM();
             this.populateAuthors();
@@ -130,7 +198,7 @@ document.addEventListener('DOMContentLoaded', function() {
             this.startBtn = document.getElementById('start-btn');
             this.markAllBtn = document.getElementById('mark-all-btn');
             this.unmarkAllBtn = document.getElementById('unmark-all-btn');
-            this.noAuthorsPopup = document.getElementById('no-authors-popup');
+            this.noAuthorsPopup =
             this.inputBoxEl = document.getElementById('autoComplete');
         },
         bindEvents: function() {
@@ -164,8 +232,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 this.hide();
                 game.begin(pickedAuthors);
             } else {
-                this.showNoAuthorsPopup();
-                // alert('Не сте избрали автори!');
+                this.popups.noAuthorsPopup.show();
             }
         },
         toggleAllAuthorsOn: function() {
@@ -189,18 +256,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 return author.picked;
             });
         },
-        showNoAuthorsPopup: function() {
-            if (this.noAuthorsPopup.classList.contains('shown') == false) {
-                this.noAuthorsPopup.classList.add('shown');
-            }
-
-            setTimeout(this.hideNoAuthorsPopup.bind(this), 2000);
-        },
-        hideNoAuthorsPopup: function() {
-            if (this.noAuthorsPopup.classList.contains('shown')) {
-                this.noAuthorsPopup.classList.remove('shown');
-            }
-        }
     };
 
     newGameScreen.init();

@@ -100,3 +100,28 @@ def api_get_all_titles():
     # print(all_titles)
 
     return json.dumps(all_titles)
+
+@app.route("/api/submit_answer", methods=['POST'])
+def submit_answer():
+    if request.method == 'POST':
+        cur = conn.cursor()
+
+        excerpt = request.form.get('excerpt')
+        answer = request.form.get('answer')
+
+        pattern = '%' + excerpt + '%'
+
+        print(type(pattern))
+        cur.execute("SELECT title FROM works \
+                    WHERE content LIKE '{0}'".format(pattern))
+
+        real_answer = cur.fetchone()
+
+        answer_is_correct = answer.lower() == real_answer[0].lower()
+
+        if answer_is_correct:
+            return '1'
+        else:
+            return '0'
+    else:
+        return 'gotta be POST bro'

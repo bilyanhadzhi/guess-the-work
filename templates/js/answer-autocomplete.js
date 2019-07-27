@@ -16,5 +16,6 @@ new autoComplete({
     },
     onSelection: function(feedback) {             // Action script onSelection event | (Optional)
         newGameScreen.inputBoxEl.value = feedback.selection.value;
+        game.currentQuestionAnswerFieldText = feedback.selection.value;
     }
 });
