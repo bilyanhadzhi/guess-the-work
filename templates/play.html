@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="Description" content="Игра: познай творбата">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Познай творбата</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+</head>
+<body>
+    <header></header>
+
+    <main>
+        <section class="authors-form">
+            <h3 class="pick-authors-title">Избрани автори:</h3>
+            <section class="author-list">
+                {% for author in authors %}
+                <section class="author-list-item">
+                    <button>{{ author[1] }}</button>
+                    <div class="author-active-status picked"></div>
+                </section>
+                {% endfor %}
+            </section>
+            <button id="start-btn" class="red-btn">Старт</button>
+            <section class="toggle-all-container">
+                <button class="toggle-all-btn" id="mark-all-btn">Маркирай всички</button>
+                <button class="toggle-all-btn" id="unmark-all-btn">Отмаркирай всички</button>
+            </section>
+        </section>
+
+        <section class="game-container">
+            <section class="excerpt-container">
+
+            </section>
+            <form method="POST" class="input-container" id="answer-form" onsubmit="return false;">
+                <input id="autoComplete" name="answer-field" tabindex="1" autocomplete="off" placeholder="Име на творбата">
+                <input type="hidden" name="hidden-excerpt">
+                <button id="answer-btn" class="red-btn">Познай творбата</button>
+                <button type="button" id="show-answer-btn" class="red-btn">Виж отговора</button>
+            </form>
+        </section>
+
+        <section class="popup" id="no-authors-popup">Не сте избрали автори!</section>
+        <section class="popup" id="correct-answer-popup">Верен отговор!</section>
+        <section class="popup" id="incorrect-answer-popup">Грешен отговор!</section>
+    </main>
+
+    <footer>
+        <a href="https://github.com/bilyanhadzhi/guess-the-work" target="_blank" id="github-link">
+            Направено с <span id="heart">❤</span>
+        </a>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@6.0.0/dist/js/autoComplete.min.js"></script>
+    <script>{% include 'js/play.js' %}</script>
+</body>
+</html>

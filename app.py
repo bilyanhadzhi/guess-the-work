@@ -12,12 +12,16 @@ conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 
 @app.route("/", methods=['GET'])
 def home():
+    return render_template("home.html")
+
+@app.route("/play", methods=['GET'])
+def play():
     cur = conn.cursor()
     cur.execute("SELECT * FROM authors;")
 
     authors = cur.fetchall()
 
-    return render_template("home.html", authors=authors)
+    return render_template("play.html", authors=authors)
 
 @app.route("/api/get_excerpt", methods=['GET'])
 def api_get_excerpt():
